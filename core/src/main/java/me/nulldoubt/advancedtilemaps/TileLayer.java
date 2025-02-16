@@ -1,8 +1,6 @@
-package me.nulldoubt.advancedtilemaps.gwt;
+package me.nulldoubt.advancedtilemaps;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -369,15 +367,13 @@ public class TileLayer {
             return;
 
         if (overlayed) {
-            batch.setShader(overlayShaderProgram);
+            overlayTexture.bind(1);
+            texture.bind(0);
             overlayShaderProgram.bind();
             overlayShaderProgram.setUniformi("u_overlay", 1);
             overlayShaderProgram.setUniformi("u_texture", 0);
-            final float u_scale = overlayScale / unitScale;
-            overlayShaderProgram.setUniformf("u_scale", u_scale);
-            overlayTexture.bind(1);
-            texture.bind(0);
-            Gdx.gl20.glActiveTexture(GL20.GL_TEXTURE0);
+            overlayShaderProgram.setUniformf("u_scale", overlayScale / unitScale);
+            batch.setShader(overlayShaderProgram);
         }
 
         renderStrategy.render(this, batch);
@@ -493,8 +489,8 @@ public class TileLayer {
         };
 
         public static String nameOf(RenderStrategy renderStrategy) {
-            if (renderStrategy instanceof IntegratedStrategy)
-                return ((IntegratedStrategy) renderStrategy).name();
+            if (renderStrategy instanceof TileLayer.IntegratedStrategy)
+                return ((TileLayer.IntegratedStrategy) renderStrategy).name();
             return renderStrategy.getClass().getSimpleName();
         }
 

@@ -18,6 +18,7 @@ uniform float u_scale;
 void main() {
     vec4 baseColor = texture2D(u_texture, v_texCoords);
     vec2 overlayCoords = v_worldPosition * u_scale;
-    vec4 finalColor = mix(baseColor, texture2D(u_overlay, vec2(overlayCoords.x, 1.0 - overlayCoords.y)), floor(baseColor.r));
+    vec4 overlayColor = texture2D(u_overlay, vec2(overlayCoords.x, 1.0 - overlayCoords.y));
+    vec4 finalColor = mix(baseColor, overlayColor, floor(baseColor.r));
     gl_FragColor = v_color * finalColor;
 }
